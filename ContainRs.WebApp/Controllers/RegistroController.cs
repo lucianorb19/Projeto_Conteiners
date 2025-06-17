@@ -1,8 +1,13 @@
 ﻿using ContainRs.WebApp.Data;
+
 using ContainRs.WebApp.Models;
-using ContainRs.WebApp.UseCases;
+using ContainRs.Domain.Models;
+
+//using ContainRs.WebApp.UseCases;
+using ContainRs.Application.UseCases;
+
 using Microsoft.AspNetCore.Mvc;
-using ContainRs.WebApp.UseCases;
+
 
 namespace ContainRs.WebApp.Controllers;
 

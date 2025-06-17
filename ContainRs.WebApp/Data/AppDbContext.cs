@@ -1,16 +1,22 @@
-﻿using ContainRs.WebApp.Models;
+﻿using ContainRs.Application.Repositories;
+using ContainRs.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContainRs.WebApp.Data;
 
-public class AppDbContext : DbContext
+//public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IClienteRepository 
 {
+    //CONSTRUTOR QUE HERDA DA BASE
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 
+    //ATRIBUTOS
     public DbSet<Cliente> Clientes { get; set; }
 
+
+    //MÉTODO QUE CONFIGURA A CRIAÇÃO DAS TABELAS NA BD
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -35,4 +41,13 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Cliente>()
             .Property(c => c.CPF).IsRequired();
     }
+
+    //IMPLEMENTAÇÃO DO MÉTODO HERDADO DA INTERFACE ContainRs.Application/Repositories/IClienteRepository
+    public async Task<Cliente> AddAsync(Cliente cliente)
+    {
+        await Clientes.AddAsync(cliente);//ADICIONA CLIENTE A BD
+        await SaveChangesAsync();//SALVA AS MUDANÇAS
+        return cliente;
+    }
+
 }

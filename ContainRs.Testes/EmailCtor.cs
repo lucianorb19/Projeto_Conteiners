@@ -1,4 +1,6 @@
-using ContainRs.WebApp.Models;
+//using ContainRs.WebApp.Models;
+using ContainRs.Domain.Models;
+
 using System.Reflection;
 
 namespace ContainRs.Testes
