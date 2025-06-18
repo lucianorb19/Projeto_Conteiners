@@ -21,14 +21,17 @@ namespace ContainRs.Application.UseCases
         public string? Bairro { get; set; }
         public string? Municipio { get; set; }
         public string? Cidade { get; set; }
-        public string? Estado { get; set; }
+        
+        //public string? Estado { get; set;}
+        public UnidadeFederativa? Estado { get; set; }
 
 
         //CONSTRUTOR
         public RegistrarCliente(IClienteRepository repository, string nome, Email email, string cPF,
                                 string? celular, string? cEP, string? rua,
                                 string? numero, string? complemento, string? bairro,
-                                string? municipio, string? estado)
+                                string? municipio, UnidadeFederativa? estado)
+                              //string? municipio, string? estado)
         {
             //this.context = context;
             this.repository = repository;
