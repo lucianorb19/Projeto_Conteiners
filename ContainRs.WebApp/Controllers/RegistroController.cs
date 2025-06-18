@@ -7,6 +7,7 @@ using ContainRs.Domain.Models;
 using ContainRs.Application.UseCases;
 
 using Microsoft.AspNetCore.Mvc;
+using Azure.Core;
 
 
 namespace ContainRs.WebApp.Controllers;
@@ -43,8 +44,8 @@ public class RegistroController : Controller
         var useCase = new RegistrarCliente(context, form.Nome, new Email(form.Email),
                                            form.CPF, form.Celular, form.CEP,
                                            form.Rua, form.Numero, form.Complemento,
-                                           form.Bairro, form.Municipio, form.Estado);
-
+                                           form.Bairro, form.Municipio, UfStringConverter.From(form.Estado));
+                                         //form.Bairro, form.Municipio, form.Estado);
         await useCase.ExecutarAsync();
 
         return RedirectToAction("Sucesso");

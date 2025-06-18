@@ -1,6 +1,7 @@
 ﻿using ContainRs.Application.Repositories;
 using ContainRs.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ContainRs.WebApp.Data;
 
@@ -37,17 +38,35 @@ public class AppDbContext : DbContext, IClienteRepository
                     .IsRequired();//CAMPO Email OBRIGATÓRIO
             });
 
+        modelBuilder.Entity<Cliente>()
+            .Property(c => c.Estado)//O CAMPO ESTADO
+            .HasConversion<string>();//É CONVERTIDO DE SEU TIPO ORIGINAL PARA STRING (ENUM<->STRING)
+
 
         modelBuilder.Entity<Cliente>()
             .Property(c => c.CPF).IsRequired();
     }
 
     //IMPLEMENTAÇÃO DO MÉTODO HERDADO DA INTERFACE ContainRs.Application/Repositories/IClienteRepository
+    //MÉTODO QUE ADICIONA UM CLIENTE NA BD
     public async Task<Cliente> AddAsync(Cliente cliente)
     {
         await Clientes.AddAsync(cliente);//ADICIONA CLIENTE A BD
         await SaveChangesAsync();//SALVA AS MUDANÇAS
         return cliente;
+    }
+
+    //IMPLEMENTAÇÃO DO MÉTODO HERDADO DA INTERFACE ContainRs.Application/Repositories/IClienteRepository
+    //MÉTODO QUE RETORNA UMA LISTA DE CLIENTES DA BD, DADO UM FILTRO
+    public async Task<IEnumerable<Cliente>> GetAsync(Expression<Func<Cliente, bool>>? filtro = default)
+    {
+        IQueryable<Cliente> queryClientes = this.Clientes;
+        if(filtro != null)
+        {
+            queryClientes = queryClientes.Where(filtro);
+        }
+
+        return await queryClientes.AsNoTracking().ToListAsync();
     }
 
 }
