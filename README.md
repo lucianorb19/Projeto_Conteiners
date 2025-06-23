@@ -1,6 +1,6 @@
 # Projeto_Conteiners
 Projeto de uma aplicação WEB para aluguel de contêiners - utilizando .NET  e práticas de Clean Architecture
----
+
 
 ## DOWNLOADS NECESSÁRIOS
 * Visual Studio 2022 (.net sdk 8);
@@ -127,11 +127,11 @@ _(não seria melhor ensinar o formato de e-mail correto?)_
 ## TEORIA - ENTIDADES, VALUE OBJECTS E AGREGADOS
 Na camada de Domínio, empregamos com frequência padrões de projeto como Entidades, ValueObjects e Agregados.  
 
--Entidades representam objetos com identidade própria e ciclo de vida independente. Em nosso projeto, um Cliente é uma entidade.  
+* Entidades representam objetos com identidade própria e ciclo de vida independente. Em nosso projeto, um Cliente é uma entidade.  
 
--ValueObjects simbolizam conceitos que existem somente a partir de outros tipos, sendo, portanto, dependentes deles. O Email, que criamos para ilustrar um conceito de negócio importante para a ContainRs, existe somente a partir de um cliente. É, portanto, um exemplo de ValueObject.  
+* ValueObjects simbolizam conceitos que existem somente a partir de outros tipos, sendo, portanto, dependentes deles. O Email, que criamos para ilustrar um conceito de negócio importante para a ContainRs, existe somente a partir de um cliente. É, portanto, um exemplo de ValueObject.  
 
--Agregados mantêm a integridade de um grupo de objetos relacionados a partir de um ponto-raiz que permite o acesso consistente aos dados deste agrupamento. Não temos um exemplo de agregado ainda no projeto ContainRs, mas um exemplo seria uma NotaFiscal, que relaciona seus itens de forma bastante coesa.  
+* Agregados mantêm a integridade de um grupo de objetos relacionados a partir de um ponto-raiz que permite o acesso consistente aos dados deste agrupamento. Não temos um exemplo de agregado ainda no projeto ContainRs, mas um exemplo seria uma NotaFiscal, que relaciona seus itens de forma bastante coesa.  
 
 ## TESTE AUTOMATIZADO DE EMAIL COM XUNIT TEST
 Botão direito em “Solução ContainRs”->Adicionar->Projeto-> Teste xUnit  
@@ -172,23 +172,23 @@ Executar o teste - botão direito no nome do teste->executar teste
 Se ficar tudo verde - significa que o teste fez o esperado, ou seja, lançou exceção para o caso onde foi tentado criar um e-mail com um string “valor qualquer”, o que não é um objeto Email aceito pela aplicação.
 
 ## CAMADAS DA CLEAN ARCHITECTURE
-1. REGRAS DE NEGÓCIO / DOMÍNIO
+1. REGRAS DE NEGÓCIO / DOMÍNIO  
 Regras e conceitos de negócio - models  
 
-2. ADAPTADORES DE INTERFACE / INTERFACE DE ENTRADA E SAÍDA / INTERFACE
+2. ADAPTADORES DE INTERFACE / INTERFACE DE ENTRADA E SAÍDA / INTERFACE  
 Traduz dados de entrada/saída para/de outras camadas - no projeto, RegistroViewModel e ErrorViewModel, Controllers.  
 
 A camada de Interface de Entrada e Saída na Arquitetura Limpa tem como propósito mediar a interação do sistema com o mundo externo. Ela define como os dados chegam e saem da aplicação, transformando-os em um formato compreensível para outras camadas. Com isso, ela é responsável por capturar eventos externos, sejam provenientes de uma interface de usuário, requisições HTTP ou mesmo mensagens de um sistema de filas.  
 
 Destacamos alguns padrões de projeto frequentemente encontrados na camada de Interface de Entrada e Saída:  
 
--Mediator: responsável por orquestrar fluxos de processamento, este tipo é comumente utilizado dentro de controladores ou o próprio controlador pode ser o mediador, como RegistroController em nosso projeto.  
+* Mediator: responsável por orquestrar fluxos de processamento, este tipo é comumente utilizado dentro de controladores ou o próprio controlador pode ser o mediador, como RegistroController em nosso projeto.  
 
--ViewModel ou DTO: representam os dados de entrada ou saída, que serão transportados (por isso o DTO: Data Transfer Object) para as rotinas internas do sistema. Os dados digitados em nosso formulário de registro foram representados pelo RegistroViewModel.  
+* ViewModel ou DTO: representam os dados de entrada ou saída, que serão transportados (por isso o DTO: Data Transfer Object) para as rotinas internas do sistema. Os dados digitados em nosso formulário de registro foram representados pelo RegistroViewModel.  
 
--Adapter: utilizado para conectar componentes externos necessários a execução de uma rotina específica do sistema. Em uma interpretação bem livre, podemos dizer que o tipo AppDbContext, que está sendo injetado no controlador RegistroController, é um exemplo de adapter, porque faz a ponte entre a rotina e a persistência de dados.  
+* Adapter: utilizado para conectar componentes externos necessários a execução de uma rotina específica do sistema. Em uma interpretação bem livre, podemos dizer que o tipo AppDbContext, que está sendo injetado no controlador RegistroController, é um exemplo de adapter, porque faz a ponte entre a rotina e a persistência de dados.  
 
--Decorator: empregado para adicionar responsabilidades de maneira flexível, como por exemplo logging ou validação. Há várias propriedades do tipo Registro ViewModel com atributos de validação, aumentando assim sua capacidade.  
+* Decorator: empregado para adicionar responsabilidades de maneira flexível, como por exemplo logging ou validação. Há várias propriedades do tipo Registro ViewModel com atributos de validação, aumentando assim sua capacidade.  
 
 Vale observar também que o padrão arquitetural MVC (Model-View-Controller) é usado para organizar todo o código que compõe a camada de interface. Controllers são responsáveis por receber os eventos externos, traduzindo as informações vindas do mundo externo, em seguida mediando as funções internas da aplicação em colaboração com os Models e por fim traduzindo de volta para o mundo externo, em geral por meio do HTML localizado nas Views.  
 
@@ -196,20 +196,22 @@ Em C#, a camada de Interface de Entrada e Saída costuma aproveitar recursos com
 
 Um anti-pattern comum nessa camada é escrever diretamente as regras de negócio no código que trata o evento externo, em nosso caso no controlador (alerta de spoiler 😁). Como esse código precisa lidar com tradução, validação e a mediação em si, colocar regras de negócio ali deixa o projeto muito vulnerável a mudanças.  
 
-3. 3-APLICAÇÃO / USE CASES
+3. APLICAÇÃO / USE CASES
 Fluxos de tratamento do negócio - casos de uso.  
 A camada de Aplicação na Arquitetura Limpa tem como objetivo principal orquestrar os casos de uso do sistema, atuando como um intermediário entre as camadas de Domínio e as Interfaces de Entrada/Saída. Ela define a lógica de aplicação e os fluxos de trabalho que respondem às solicitações do usuário ou de outros sistemas, garantindo que as regras de negócio sejam aplicadas corretamente e que o sistema se comporte de maneira previsível e robusta.    
 
 Dentro da camada de Aplicação é comum encontrar padrões de projeto como:
 
-Command: encapsula as requisições que representam as funções da aplicação; em nosso projeto ContainRs, RegistrarCliente é um comando.  
+Command: encapsula as requisições que representam as funções da aplicação. Em nosso projeto ContainRs, RegistrarCliente é um comando.  
 
 Mediator: usado para orquestrar a comunicação entre casos de uso complexos. Apesar de não termos um exemplo deste padrão em nosso projeto, imagine um caso de uso em que seja necessário registrar um acontecimento para que outras partes da aplicação tenham ciência do ocorrido. Por exemplo, nosso registro de clientes deve disparar um evento ClienteRegistrado e o módulo de auditoria deve capturar esse evento e persisti-lo em sua base de dados. Podemos usar uma classe que implementa o padrão Mediator para o disparo desses eventos.  
 
 Result: encapsula o resultado de uma operação, incluindo informações sobre sucesso, falhas e mensagens associadas. No registro de clientes, poderíamos representar os tipos de resultado possíveis através de classes específicas. Por exemplo: cliente registrado com sucesso, falha na persistência do cliente, CPF já registrado, dentre outros.  
 
-Além destes padrões, em geral observamos um design de código baseado no CQRS, sigla para Command Query Responsibility Segregation, padrão que separa casos de uso em operações de escrita e leitura.
-Algumas técnicas e recursos da linguagem C# são bastante utilizados na camada de Aplicação. Interfaces são empregadas para definir contratos de serviços e abstrações, enquanto genéricos são usados para representar serviços reutilizáveis, como tratadores de caso de uso (handlers) genéricos para comandos e/ou queries.
+Além destes padrões, em geral observamos um design de código baseado no CQRS, sigla para Command Query Responsibility Segregation, padrão que separa casos de uso em operações de escrita e leitura.  
+
+Algumas técnicas e recursos da linguagem C# são bastante utilizados na camada de Aplicação. Interfaces são empregadas para definir contratos de serviços e abstrações, enquanto genéricos são usados para representar serviços reutilizáveis, como tratadores de caso de uso (handlers) genéricos para comandos e/ou queries.  
+
 As palavras reservadas async/await são fundamentais nos métodos que executam os casos de uso, garantindo operações assíncronas e responsivas. Por fim, records são usados para representar objetos imutáveis de entrada e saída, facilitando a integridade e a simplicidade no transporte de dados. 
 
 4. INFRAESTRUTURA
@@ -222,10 +224,10 @@ Na Arquitetura Limpa, a camada de Infraestrutura tem como principal objetivo for
 Como abordaremos em mais detalhes a seguir, essa camada deve ser mantida desacoplada do núcleo do sistema, garantindo que as dependências externas não contaminem regras de negócio ou a lógica de aplicação.  
 
 Dentre os padrões de projeto frequentemente encontrados na camada de Infraestrutura, destacam-se:  
-Repository, para abstrair a persistência de dados;  
-Adapter, para converter interfaces de terceiros em formatos compreensíveis pelo sistema;  
-Factory, usado na criação de objetos complexos, como conexões de banco de dados;  
-Unit of Work, que garante a consistência dos dados a partir da coordenação de alterações realizadas em múltiplos repositórios, gerando através de transações.  
+* Repository, para abstrair a persistência de dados;  
+* Adapter, para converter interfaces de terceiros em formatos compreensíveis pelo sistema;  
+* Factory, usado na criação de objetos complexos, como conexões de banco de dados;  
+* Unit of Work, que garante a consistência dos dados a partir da coordenação de alterações realizadas em múltiplos repositórios, gerando através de transações.  
 
 No contexto do C#, os tipos da camada de Infraestrutura frequentemente utilizam recursos como Dependency Injection para gerenciar instâncias de serviços, LINQ para consultas sobre coleções ou bancos de dados, e async/await para realizar operações assíncronas, como chamadas a APIs externas ou operações de I/O. Também é comum o uso de bibliotecas e tipos populares, como Entity Framework, Dapper e HttpClient, que facilitam o desenvolvimento de funcionalidades específicas da camada.  
 
@@ -442,12 +444,13 @@ Botão direito em Solução ContainRs-> adicionar-> Novo projeto-> Biblioteca de
 -Sincronizar o namespace  
 
 Também será preciso referenciar projetos, para que um possa enxergar o outro, mas isso não pode ser feito de qualquer maneira  
+
 **Regras da Clean Architecture**
-* Camadas externas só enxergam a sua interna, OU SEJA
-    * Domínio só enxerga ela mesma;
-    * Aplicação só consegue enxergar domínio;
-    * Interface só enxerga aplicação (que enxerga domínio);
-    * Infraestrutura só enxerga interface (que enxerga aplicação (que enxerga domínio)).
+* **Camadas externas só enxergam a sua interna, OU SEJA**
+    * **Domínio só enxerga ela mesma;**
+    * **Aplicação só consegue enxergar domínio;**
+    * **Interface só enxerga aplicação (que enxerga domínio);**
+    * **Infraestrutura só enxerga interface (que enxerga aplicação (que enxerga domínio)).**
 
 Então, em ContainRs.Application/Dependências-> Adicionar referência ao projeto-> ContainRs.Domain  
 
@@ -456,7 +459,7 @@ Feito isso, no código ainda nos resta um problema: a variável context, que é 
 Criar uma abstração das operações de AppDbContext, que essencialmente funciona, nesse caso, para acessar os dados dos clientes na BD, ou seja, criar uma interface que em dado momento, será implementada pela camada devida. Nesse caso, uma interface na camada de aplicação que será implementada na camada de infraestrutura.  
 
 Isso é feito criando, na camada de aplicação, uma interface do tipo IClienteRepository  
-Botão direito em ContainRs.Application-> Criar pasta Repositories-> Nessa pasta criar uma interface IClientRepository com um método abstrato Task<Cliente> 
+Botão direito em ContainRs.Application-> Criar pasta Repositories-> Nessa pasta criar uma interface IClientRepository com um método abstrato Task< Cliente > 
 ```
 using ContainRs.Domain.Models;
 
@@ -561,18 +564,18 @@ Agora, temos uma solução completa, implementada com a Clean Architecture , que
 ## TEORIA - PRINCÍPIOS SOLID
 Os princípios SOLID são um conjunto de diretrizes criadas para tornar os sistemas de software mais fáceis de entender, modificar e manter. Esses princípios estão profundamente alinhados com os fundamentos da arquitetura limpa, pois promovem a separação de responsabilidades, baixo acoplamento e alta coesão. Ao aplicá-los, pessoas desenvolvedoras podem criar aplicações mais robustas e flexíveis, que se adaptam bem a mudanças e são mais simples de testar e escalar.  
 
-O princípio da Responsabilidade Única (Single Responsibility Principle – SRP) afirma que uma classe deve ter apenas uma razão para mudar, ou seja, deve possuir uma única responsabilidade bem definida. Isso reduz a complexidade ao garantir que cada componente do sistema esteja focado em um propósito específico, facilitando manutenções e atualizações futuras sem introduzir efeitos colaterais.
+O princípio da Responsabilidade Única (**S**ingle Responsibility Principle – SRP) afirma que uma classe deve ter apenas uma razão para mudar, ou seja, deve possuir uma única responsabilidade bem definida. Isso reduz a complexidade ao garantir que cada componente do sistema esteja focado em um propósito específico, facilitando manutenções e atualizações futuras sem introduzir efeitos colaterais.
 Como já mencionado, o nome de um tipo (seja classe, interface, enum, struct ou record) deve indicar esta responsabilidade. Atente-se ao nomear um tipo: sua dificuldade pode ser um sinal de que estamos ferindo o SRP. Prefixos e sufixos no nome também ajudam a indicar padrões e, portanto, a principal responsabilidade do tipo.  
 
-O princípio Aberto-Fechado (Open/Closed Principle – OCP) sugere que entidades de software devem estar abertas para extensão, mas fechadas para modificação. Em outras palavras, é preferível adicionar novas funcionalidades através de extensões em vez de alterar o código existente, minimizando o risco de introduzir erros em um sistema estável.  
+O princípio Aberto-Fechado (**O**pen/Closed Principle – OCP) sugere que entidades de software devem estar abertas para extensão, mas fechadas para modificação. Em outras palavras, é preferível adicionar novas funcionalidades através de extensões em vez de alterar o código existente, minimizando o risco de introduzir erros em um sistema estável.  
 
 Em nosso projeto ContainRs, imagine que fosse necessário consultar CEPs usando outro serviço. Atualmente estamos ferindo o OCP, porque dependemos diretamente da interface IViaCepService. O ideal seria termos uma interface genérica de consulta a CEPs e injetá-la nos locais onde a consulta fosse necessária. Para usar outro serviço de consulta que não o ViaCep, bastaria criar outra implementação da interface genérica e configurar essa implementação no container de injeção de dependência.  
 
-O princípio de Substituição de Liskov (Liskov Substitution Principle – LSP) estipula que uma classe derivada deve poder substituir sua classe base sem comprometer o comportamento esperado do sistema. Isso garante que a herança seja usada corretamente e que os contratos entre classes sejam respeitados, promovendo a reutilização e a previsibilidade.  
+O princípio de Substituição de Liskov (**L**iskov Substitution Principle – LSP) estipula que uma classe derivada deve poder substituir sua classe base sem comprometer o comportamento esperado do sistema. Isso garante que a herança seja usada corretamente e que os contratos entre classes sejam respeitados, promovendo a reutilização e a previsibilidade.  
 
-O princípio da Segregação de Interfaces (Interface Segregation Principle – ISP) preconiza que os clientes não devem ser forçados a depender de interfaces que não utilizam. Isso implica em criar interfaces específicas e enxutas, reduzindo o acoplamento e evitando que alterações em uma parte do sistema impactem indevidamente outras partes. Em nosso projeto, podemos segregar a interface IClienteRepository em interfaces distintas, uma para cada operação do repositório (inclusão, remoção, dentre outras).  
+O princípio da Segregação de Interfaces (**I**nterface Segregation Principle – ISP) preconiza que os clientes não devem ser forçados a depender de interfaces que não utilizam. Isso implica em criar interfaces específicas e enxutas, reduzindo o acoplamento e evitando que alterações em uma parte do sistema impactem indevidamente outras partes. Em nosso projeto, podemos segregar a interface IClienteRepository em interfaces distintas, uma para cada operação do repositório (inclusão, remoção, dentre outras).  
 
-Por fim, o princípio da Inversão de Dependência (Dependency Inversion Principle – DIP) propõe que módulos de alto nível não devem depender de módulos de baixo nível, mas ambos devem depender de abstrações. Isso torna o sistema mais flexível e resiliente às mudanças, pois as dependências podem ser facilmente substituídas por implementações alternativas. Podemos relacionar diretamente esse princípio com a regra fundamental da arquitetura limpa: "camadas internas (alto nível) não devem depender de camadas mais externas (baixo nível)".  
+Por fim, o princípio da Inversão de Dependência (**D**ependency Inversion Principle – DIP) propõe que módulos de alto nível não devem depender de módulos de baixo nível, mas ambos devem depender de abstrações. Isso torna o sistema mais flexível e resiliente às mudanças, pois as dependências podem ser facilmente substituídas por implementações alternativas. Podemos relacionar diretamente esse princípio com a regra fundamental da arquitetura limpa: "camadas internas (alto nível) não devem depender de camadas mais externas (baixo nível)".  
 
 ## INSERÇÃO DE NOVOS CLIENTES NO PROJETO
 Em ContainRs.WebApp/Connected Services/Banco de dados do SQL Server-> botão direito-> Abir no pesquisador de objetos  
