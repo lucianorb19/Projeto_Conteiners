@@ -196,7 +196,7 @@ Em C#, a camada de Interface de Entrada e Saída costuma aproveitar recursos com
 
 Um anti-pattern comum nessa camada é escrever diretamente as regras de negócio no código que trata o evento externo, em nosso caso no controlador (alerta de spoiler 😁). Como esse código precisa lidar com tradução, validação e a mediação em si, colocar regras de negócio ali deixa o projeto muito vulnerável a mudanças.  
 
-3. APLICAÇÃO / USE CASES
+3. APLICAÇÃO / USE CASES  
 Fluxos de tratamento do negócio - casos de uso.  
 A camada de Aplicação na Arquitetura Limpa tem como objetivo principal orquestrar os casos de uso do sistema, atuando como um intermediário entre as camadas de Domínio e as Interfaces de Entrada/Saída. Ela define a lógica de aplicação e os fluxos de trabalho que respondem às solicitações do usuário ou de outros sistemas, garantindo que as regras de negócio sejam aplicadas corretamente e que o sistema se comporte de maneira previsível e robusta.    
 
@@ -214,7 +214,7 @@ Algumas técnicas e recursos da linguagem C# são bastante utilizados na camada 
 
 As palavras reservadas async/await são fundamentais nos métodos que executam os casos de uso, garantindo operações assíncronas e responsivas. Por fim, records são usados para representar objetos imutáveis de entrada e saída, facilitando a integridade e a simplicidade no transporte de dados. 
 
-4. INFRAESTRUTURA
+4. INFRAESTRUTURA  
 Camada responsável por concluir o fluxo. Frameworks, drivers,...  
 Variável de conexão com BD é um exemplo  
 Serviços configurados em Program.cs é um exemplo.  
